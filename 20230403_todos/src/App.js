@@ -32,6 +32,7 @@ const GlobalStyle = createGlobalStyle`
     font-weight:bold;
     background-color:#fff;    
     cursor: default;
+    user-select: none;
   }
   button{
     border:none;

@@ -12,14 +12,19 @@ let nextID = 4;
 function Todos() {
   const [todos, setTodos] = useState(listProperty);
   const [text, setText] = useState("");
-  // const [edit, setEdit] = useState(false);
+  const [edit, setEdit] = useState(false);
   const focusRef = useRef();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setTodos(todos.concat({ id: nextID++, text: text, done: false }));
+    if (edit) {
+      setTodos(todos.concat({ id: nextID++, text: text, done: false }));
+      focusRef.current.focus();
+      setEdit(edit);
+    } else {
+      setEdit(!edit);
+    }
     setText("");
-    focusRef.current.focus();
   };
   const handleText = (e) => {
     setText(e.target.value);
@@ -66,17 +71,17 @@ function Todos() {
 
       <Footer>
         <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="해야할 일을 입력해주세요"
-            ref={focusRef}
-            onChange={handleText}
-            value={text}
-          />
-          <BtnWrapper>
-            {/* <AddBtn>{edit ? "Add" : "Submit"}</AddBtn> */}
-            <AddBtn>Add</AddBtn>
-          </BtnWrapper>
+          {edit && (
+            <input
+              type="text"
+              placeholder="해야할 일을 입력해주세요"
+              ref={focusRef}
+              onChange={handleText}
+              value={text}
+            />
+          )}
+
+          <AddBtn>{edit ? "Add" : "submit"}</AddBtn>
         </form>
       </Footer>
     </Container>
@@ -116,32 +121,29 @@ const Footer = styled.footer`
   form {
     position: relative;
     display: flex;
-    /* flex-direction: column; */
+    height: 25px;
+    gap: 10px;
 
     input[type="text"] {
       flex: 1;
-      z-index: 1;
+      /* z-index: 1; */
     }
-    /* .addBtn {
-      background-color: rgba(255, 0, 0, 0.5);
-      position: fixed;
-      bottom: 0;
-      left: 0;
-    } */
   }
 `;
 
 const DeleteBtn = styled.button`
   background-color: rgba(255, 0, 0, 0.5);
 `;
-const BtnWrapper = styled.div`
-  position: relative;
-  z-index: 2;
-`;
 
 const AddBtn = styled.button`
   background-color: rgba(29, 133, 255, 0.5);
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 25px;
+
+  /* width: 100%; */
 `;
 
 export default Todos;
